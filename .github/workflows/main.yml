@@ -1,0 +1,77 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+  
+# Define an environment variable 'CUSTOM_VAR' at the workflow level.
+env:
+  CUSTOM_VAR: value
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  example:
+    runs-on: ubuntu-latest
+    steps:
+      - id: step-one
+        run: echo "::set-output name=value::$(echo hello)"
+
+      - id: step-two
+        run: |
+          echo "Received value from previous step: ${{ steps.step-one.outputs.value }}"
+
+  
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+
+      - name: Use environmental variable
+        run: echo $CUSTOM_VAR
+      # Access 'CUSTOM_VAR' in a step.
+      
+      - name: Install dependencies
+        run: npm install
+      # 'npm install' installs the dependencies defined in your project's 'package.json' file.
+      
+      - name: Build
+        run: npm run build
+      # 'npm run build' runs the build script defined in your 'package.json'. This is typically used for compiling or preparing your code for deployment.
+
+      - name: Run tests
+        run: npm test
+      # 'npm test' runs the test script defined in your 'package.json'. It's crucial for ensuring that your code works as expected before deployment.
+
+   
+      - name: Use secret
+        run: |
+          echo "Access Token: ${{" secrets.ACCESS_TOKEN "}}"
+      # Use 'ACCESS_TOKEN' secret defined in the repository settings.
+
+
+
+
+
+      # Runs a single command using the runners shell
+      - name: Run a one-line script
+        run: echo Hello, world!
+
+      # Runs a set of commands using the runners shell
+      - name: Run a multi-line script
+        run: |
+          echo Add other actions to build,
+          echo test, and deploy your project.
